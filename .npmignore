@@ -7,17 +7,8 @@ node_modules
 .npmrc
 .npmignore
 
-# Test files
-test
 test-local.sh
-
-# Demo and examples (keep these in the repo but not in the npm package)
-demo
-examples
-
-# Build files
+docs
 publish.sh
-
-# Misc
 *.log
 .DS_Store
