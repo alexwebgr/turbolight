@@ -16,28 +16,18 @@ It is lightweight, vanilla Javascript that works seamlessly with Turbo Streams a
 - 📱 Responsive design
 
 ## Demo
-Check out the live [demo](https://alexwebgr.github.io/turbolight/)
+Check out the live [demo](https://alexwebgr.github.io/turbolight/).
+
 The npm package is available on the [registry](https://www.npmjs.com/package/turbolight)
+
 ## Installation
 
 ### For Rails Applications
 
-Add to your `package.json` dependencies:
-
-```json
-{
-  "dependencies": {
-    "turbolight": "^1.0.0"
-  }
-}
-```
-
-Then run:
-
 ```bash
-yarn install
+yarn add turbolight
 # or
-npm install
+npm install turbolight
 ```
 
 ### Other Installation Methods
@@ -61,7 +51,6 @@ const TurboLight = require('turbolight');
 ```
 
 ### 2. Add CSS
-#### In Rails with asset pipeline
 
 In your `app/assets/stylesheets/application.scss`:
 
