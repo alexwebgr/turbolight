@@ -1,0 +1,18 @@
+{
+  "name": "turbo_light",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [
+    "turbo",
+    "rails",
+    "lightbox",
+    "hotwire",
+    "vanillajs"
+  ],
+  "license": "MIT",
+  "author": "alexwebgr",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+  }
+}
