@@ -1,7 +1,7 @@
 {
-  "name": "turbo_light",
+  "name": "turbolight",
   "version": "1.0.0",
-  "description": "",
+  "description": "A lightweight, vanilla JavaScript lightbox that works with Turbo Streams",
   "keywords": [
     "turbo",
     "rails",
@@ -9,10 +9,44 @@
     "hotwire",
     "vanillajs"
   ],
+  "homepage": "https://github.com/alexwebgr/turbolight",
+  "bugs": {
+    "url": "https://github.com/alexwebgr/turbolight/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexwebgr/turbolight.git"
+  },
   "license": "MIT",
   "author": "alexwebgr",
   "type": "module",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "browser": "dist/index.umd.js",
+  "unpkg": "dist/index.umd.min.js",
+  "types": "src/index.d.ts",
+  "style": "src/turbolight.css",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.js"
+    },
+    "./style": "./src/turbolight.css"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
   "scripts": {
+    "build": "mkdir -p dist && npm run build:js && npm run build:css",
+    "build:js": "esbuild src/index.js --bundle --minify --sourcemap --target=es2015 --format=esm --outfile=dist/index.esm.js && esbuild src/index.js --bundle --minify --sourcemap --target=es2015 --format=cjs --outfile=dist/index.js && esbuild src/index.js --bundle --sourcemap --target=es2015 --format=iife --global-name=TurboLight --outfile=dist/index.umd.js && esbuild src/index.js --bundle --minify --sourcemap --target=es2015 --format=iife --global-name=TurboLight --outfile=dist/index.umd.min.js",
+    "build:css": "cp src/turbolight.css dist/turbolight.css",
+    "dev": "esbuild src/index.js --bundle --sourcemap --target=es2015 --format=esm --outfile=dist/index.esm.js --watch",
+    "test": "echo \"No tests specified\" && exit 0",
+    "prepublishOnly": "npm run build"
+  },
+  "devDependencies": {
+    "esbuild": "^0.20.0"
   }
 }
