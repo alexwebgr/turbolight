@@ -17,7 +17,7 @@ It is lightweight, vanilla Javascript that works seamlessly with Turbo Streams a
 
 ## Demo
 Check out the live [demo](https://alexwebgr.github.io/turbolight/)
-
+The npm package is available on the [registry](https://www.npmjs.com/package/turbolight)
 ## Installation
 
 ### For Rails Applications

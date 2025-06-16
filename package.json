@@ -1,6 +1,6 @@
 {
   "name": "turbolight",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A lightweight, vanilla JavaScript lightbox that works with Turbo Streams",
   "keywords": [
     "turbo",
@@ -43,7 +43,6 @@
     "build:js": "esbuild src/index.js --bundle --minify --sourcemap --target=es2015 --format=esm --outfile=dist/index.esm.js && esbuild src/index.js --bundle --minify --sourcemap --target=es2015 --format=cjs --outfile=dist/index.js && esbuild src/index.js --bundle --sourcemap --target=es2015 --format=iife --global-name=TurboLight --outfile=dist/index.umd.js && esbuild src/index.js --bundle --minify --sourcemap --target=es2015 --format=iife --global-name=TurboLight --outfile=dist/index.umd.min.js",
     "build:css": "cp src/turbolight.css dist/turbolight.css",
     "dev": "esbuild src/index.js --bundle --sourcemap --target=es2015 --format=esm --outfile=dist/index.esm.js --watch",
-    "test": "echo \"No tests specified\" && exit 0",
     "prepublishOnly": "npm run build"
   },
   "devDependencies": {
