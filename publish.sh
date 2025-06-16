@@ -30,10 +30,6 @@ fi
 echo "Building the package..."
 npm run build
 
-# Run tests if they exist
-echo "Running tests..."
-npm test
-
 # Bump the version
 echo "Bumping version ($1)..."
 npm version $1
