@@ -6,14 +6,12 @@ It is lightweight, vanilla Javascript that works seamlessly with Turbo Streams a
 
 ## Features
 
-- 🖼️ Gallery support with navigation
-- ⌨️ Keyboard navigation (arrow keys, escape)
+- 🪶 Lightweight with zero dependencies
+- 🚀 Turbo compatibility
+- 📱 Responsive design
+- ⌨️ Keyboard navigation
 - 📝 Caption support
 - 🔢 Counter display
-- ❌ Multiple closing options (close button, background click, ESC key)
-- 🚀 Turbo compatibility
-- 🪶 Lightweight with zero dependencies
-- 📱 Responsive design
 
 ## Demo
 Check out the live [demo](https://alexwebgr.github.io/turbolight/).
@@ -24,16 +22,16 @@ The npm package is available on the [registry](https://www.npmjs.com/package/tur
 
 ### For Rails Applications
 
+#### 1. Install
+
 ```bash
 yarn add turbolight
 # or
 npm install turbolight
 ```
 
-### Other Installation Methods
-
-### 1. Import the module
-#### In Rails with importmap-rails
+#### 2. Import the module
+##### with importmap-rails
 
 In your `config/importmap.rb`:
 
@@ -41,6 +39,7 @@ In your `config/importmap.rb`:
 pin "turbolight", to: "turbolight/dist/index.esm.js"
 ```
 
+##### with jsbundling
 In your JavaScript file:
 
 ```javascript
@@ -50,7 +49,7 @@ import TurboLight from "turbolight";
 const TurboLight = require('turbolight');
 ```
 
-### 2. Add CSS
+#### 3. Add CSS
 
 In your `app/assets/stylesheets/application.scss`:
 
@@ -66,7 +65,7 @@ Or in your `app/assets/stylesheets/application.css`:
  */
 ```
 
-### 2. Add your HTML markup
+#### 4. Add your HTML markup
 
 ```html
 <!-- Single image -->
@@ -85,14 +84,14 @@ Or in your `app/assets/stylesheets/application.css`:
 
 What is [faw_icon](https://github.com/alexwebgr/faw_icon) you ask? It is a gem I have built around fontawesome icons.
 
-### 3. Initialize TurboLight
+#### 5. Initialize TurboLight
 
 ```javascript
 // Initialize with default options
-const lightbox = new TurboLight();
+new TurboLight();
 
 // Or with custom options
-const lightbox = new TurboLight({
+new TurboLight({
   imageClass: 'custom-image-class',
   captionClass: 'custom-caption-class',
   // ... more options
@@ -130,18 +129,45 @@ import TurboLightController from "./turbo_light_controller"
 application.register("turbo-light", TurboLightController)
 ```
 
-#### Other methods
+#### 6. Enjoy
+Enjoy the blazing fast performance.
 
-Add the CSS to your page for styling the lightbox:
+### Using as a standalone
+
+#### 1. Install 
+```bash
+yarn add turbolight
+# or
+npm install turbolight
+```
+
+#### 2. Import
+Add the CSS to your page for styling the lightbox
 
 ```html
 <link rel="stylesheet" href="node_modules/turbolight/dist/turbolight.css">
 ```
 
-Or import it in your CSS/SCSS file:
+Or import it in your CSS/SCSS file
 
 ```css
 @import 'turbolight/dist/turbolight.css';
+```
+For javascript there are a couple ways to do it 
+
+```html
+  <script type="module">
+    import TurboLight from './node_modules/turbolight/dist/index.esm.js';
+    const lightbox = new TurboLight();
+  </script>
+```
+Or
+```html
+    <script src="node_modules/turbolight/dist/index.umd.min.js" type="text/javascript"></script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+        new TurboLight.default();
+    });
 ```
 
 ## API Documentation
@@ -151,6 +177,8 @@ Or import it in your CSS/SCSS file:
 ```javascript
 const lightbox = new TurboLight({
   // CSS class names for customization
+  overlayClass: 'turbo-light-overlay',
+  containerClass: 'turbo-light-container',
   imageClass: 'turbo-light-image',
   captionClass: 'turbo-light-caption',
   counterClass: 'turbo-light-counter',

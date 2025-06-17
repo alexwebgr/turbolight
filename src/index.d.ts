@@ -3,6 +3,18 @@
  */
 export interface TurboLightOptions {
   /**
+   * CSS class for the lightbox overlay
+   * @default 'turbo-light-overlay'
+   */
+  overlayClass?: string;
+  
+  /**
+   * CSS class for the lightbox container
+   * @default 'turbo-light-container'
+   */
+  containerClass?: string;
+  
+  /**
    * CSS class for the lightbox image
    * @default 'turbo-light-image'
    */

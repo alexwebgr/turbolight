@@ -14,7 +14,6 @@
       padding: 20px;
     }
   </style>
-  <script src="dist/index.umd.min.js" type="text/javascript"></script>
 </head>
 <body>
   <h1>TurboLight Demo</h1>
@@ -49,21 +48,9 @@
     <p>For complete documentation, installation instructions, and Rails integration examples, please refer to the <a href="https://github.com/alexwebgr/turbolight#readme" target="_blank">GitHub README</a>.</p>
   </section>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Check if TurboLight is available in the global scope
-      if (typeof TurboLight === 'object' && TurboLight.default) {
-        // For UMD bundle that exposes TurboLight with a default property
-        new TurboLight.default();
-        console.log('TurboLight initialized successfully via default export');
-      } else if (typeof TurboLight === 'function') {
-        // For UMD bundle that exposes TurboLight directly as a constructor
-        new TurboLight();
-        console.log('TurboLight initialized successfully as direct constructor');
-      } else {
-        console.error('TurboLight is not available as a constructor', typeof TurboLight);
-      }
-    });
+  <script type="module">
+    import TurboLight from './dist/index.esm.js';
+    const lightbox = new TurboLight();
   </script>
 </body>
 </html>

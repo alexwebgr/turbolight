@@ -13,6 +13,8 @@ class TurboLight {
   constructor(options = {}) {
     // Default options
     this.options = Object.assign({
+      overlayClass: 'turbo-light-overlay',
+      containerClass: 'turbo-light-container',
       imageClass: 'turbo-light-image',
       captionClass: 'turbo-light-caption',
       counterClass: 'turbo-light-counter',
@@ -54,34 +56,11 @@ class TurboLight {
     // Find all lightbox links and group them by gallery
     this.findLinks();
 
-    // Remove any existing lightbox elements to prevent duplicates
-    this.cleanupExistingElements();
-
     // Create new lightbox elements
     this.createLightboxElements();
   }
 
-  /**
-   * Clean up any existing lightbox elements in the DOM
-   */
-  cleanupExistingElements() {
-    const existingOverlay = document.querySelector('.turbo-light-overlay');
-    if (existingOverlay) {
-      // Remove event listeners to prevent memory leaks
-      const closeButton = existingOverlay.querySelector('.turbo-light-close');
-      const prevButton = existingOverlay.querySelector('.turbo-light-prev');
-      const nextButton = existingOverlay.querySelector('.turbo-light-next');
 
-      // Use bound event handlers if they exist, otherwise use direct methods
-      if (closeButton) closeButton.removeEventListener('click', this.boundClose);
-      if (prevButton) prevButton.removeEventListener('click', this.boundPrevious);
-      if (nextButton) nextButton.removeEventListener('click', this.boundNext);
-      existingOverlay.removeEventListener('click', this.boundHandleBackgroundClick);
-
-      // Remove the element from the DOM
-      existingOverlay.remove();
-    }
-  }
 
   /**
    * Find all links with data-turbolight attribute and group them by gallery
@@ -121,38 +100,38 @@ class TurboLight {
   createLightboxElements() {
     // Create overlay
     this.overlay = document.createElement('div');
-    this.overlay.className = 'turbo-light-overlay';
+    this.overlay.className = this.options.overlayClass;
 
     // Create container for the image
     this.container = document.createElement('div');
-    this.container.className = 'turbo-light-container';
+    this.container.className = this.options.containerClass;
 
     // Create image element
     this.image = document.createElement('img');
-    this.image.className = 'turbo-light-image';
+    this.image.className = this.options.imageClass;
 
     // Create caption
     this.caption = document.createElement('div');
-    this.caption.className = 'turbo-light-caption';
+    this.caption.className = this.options.captionClass;
 
     // Create counter
     this.counter = document.createElement('div');
-    this.counter.className = 'turbo-light-counter';
+    this.counter.className = this.options.counterClass;
 
     // Create close button
     this.closeButton = document.createElement('button');
-    this.closeButton.className = 'turbo-light-close';
+    this.closeButton.className = this.options.closeClass;
     this.closeButton.innerHTML = '&times;';
     this.closeButton.setAttribute('aria-label', 'Close lightbox');
 
     // Create navigation buttons
     this.prevButton = document.createElement('button');
-    this.prevButton.className = 'turbo-light-prev';
+    this.prevButton.className = this.options.prevClass;
     this.prevButton.innerHTML = '&#10094;';
     this.prevButton.setAttribute('aria-label', 'Previous image');
 
     this.nextButton = document.createElement('button');
-    this.nextButton.className = 'turbo-light-next';
+    this.nextButton.className = this.options.nextClass;
     this.nextButton.innerHTML = '&#10095;';
     this.nextButton.setAttribute('aria-label', 'Next image');
 
@@ -181,55 +160,48 @@ class TurboLight {
    */
   handleClick(event) {
     event.preventDefault();
-
     const link = event.currentTarget;
-    const galleryName = link.dataset.turbolight;
+    this.open(link);
+  }
 
-    // Find the index of the clicked link in the gallery
+  /**
+   * Open the lightbox with the specified link
+   * @param {HTMLElement} link - The link element that was clicked
+   */
+  open(link) {
+    // If the overlay was removed (after close), recreate the lightbox elements
+    if (!this.overlay) {
+      this.createLightboxElements();
+    }
+
+    // Get the gallery name and index
+    const galleryName = link.dataset.turbolight;
+    this.currentGallery = galleryName;
     const gallery = this.galleries[galleryName];
     const index = gallery.findIndex(item => item.element === link);
 
-    this.open(galleryName, index);
-  }
-
-  /**
-   * Open the lightbox
-   * @param {string} galleryName - Gallery name
-   * @param {number} index - Index of the image to show
-   */
-  open(galleryName, index = 0) {
-    if (!this.galleries[galleryName]) {
-      console.error(`Gallery "${galleryName}" not found`);
-      return;
-    }
-
-    // Set current gallery and index
-    this.currentGallery = galleryName;
-    this.currentIndex = index;
-
     // Show the lightbox
-    this.overlay.classList.add('turbo-light-active');
+    this.overlay.classList.add(this.options.activeClass);
     this.isOpen = true;
-
-    // Add keyboard event listener
-    document.addEventListener('keydown', this.handleKeyDown);
-
-    // Show the image
-    this.showImage(index);
 
     // Prevent body scrolling
     document.body.style.overflow = 'hidden';
+
+    // Load the image
+    this.showImage(index);
+
+    // Add keyboard event listener
+    document.addEventListener('keydown', this.handleKeyDown);
   }
 
   /**
-   * Close the lightbox
+   * Close the lightbox and remove elements from DOM
    */
   close() {
     if (!this.overlay) return;
 
     // Hide the lightbox
-    this.overlay.classList.remove('turbo-light-active');
-    this.isOpen = false;
+    this.overlay.remove();
 
     // Remove keyboard event listener
     document.removeEventListener('keydown', this.handleKeyDown);
@@ -238,21 +210,17 @@ class TurboLight {
     document.body.style.overflow = '';
 
     // Reset current state
+    this.isOpen = false;
     this.currentGallery = null;
     this.currentIndex = 0;
-
-    // Clear content to prevent memory leaks and stale content
-    if (this.image) {
-      this.image.src = '';
-    }
-    
-    if (this.caption) {
-      this.caption.innerHTML = '';
-    }
-    
-    if (this.counter) {
-      this.counter.innerHTML = '';
-    }
+    this.overlay = null;
+    this.container = null;
+    this.image = null;
+    this.caption = null;
+    this.counter = null;
+    this.closeButton = null;
+    this.prevButton = null;
+    this.nextButton = null;
   }
 
   /**
@@ -309,12 +277,12 @@ class TurboLight {
     const imageData = gallery[index];
 
     // Show loading state
-    this.container.classList.add('turbo-light-loading');
+    this.container.classList.add(this.options.loadingClass);
 
     // Update the image
     this.image.src = imageData.href;
     this.image.onload = () => {
-      this.container.classList.remove('turbo-light-loading');
+      this.container.classList.remove(this.options.loadingClass);
     };
 
     // Update the caption

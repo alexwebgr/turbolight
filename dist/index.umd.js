@@ -25,6 +25,8 @@ var TurboLight = (() => {
   var TurboLight = class {
     constructor(options = {}) {
       this.options = Object.assign({
+        overlayClass: "turbo-light-overlay",
+        containerClass: "turbo-light-container",
         imageClass: "turbo-light-image",
         captionClass: "turbo-light-caption",
         counterClass: "turbo-light-counter",
@@ -55,27 +57,7 @@ var TurboLight = (() => {
      */
     init() {
       this.findLinks();
-      this.cleanupExistingElements();
       this.createLightboxElements();
-    }
-    /**
-     * Clean up any existing lightbox elements in the DOM
-     */
-    cleanupExistingElements() {
-      const existingOverlay = document.querySelector(".turbo-light-overlay");
-      if (existingOverlay) {
-        const closeButton = existingOverlay.querySelector(".turbo-light-close");
-        const prevButton = existingOverlay.querySelector(".turbo-light-prev");
-        const nextButton = existingOverlay.querySelector(".turbo-light-next");
-        if (closeButton)
-          closeButton.removeEventListener("click", this.boundClose);
-        if (prevButton)
-          prevButton.removeEventListener("click", this.boundPrevious);
-        if (nextButton)
-          nextButton.removeEventListener("click", this.boundNext);
-        existingOverlay.removeEventListener("click", this.boundHandleBackgroundClick);
-        existingOverlay.remove();
-      }
     }
     /**
      * Find all links with data-turbolight attribute and group them by gallery
@@ -104,25 +86,25 @@ var TurboLight = (() => {
      */
     createLightboxElements() {
       this.overlay = document.createElement("div");
-      this.overlay.className = "turbo-light-overlay";
+      this.overlay.className = this.options.overlayClass;
       this.container = document.createElement("div");
-      this.container.className = "turbo-light-container";
+      this.container.className = this.options.containerClass;
       this.image = document.createElement("img");
-      this.image.className = "turbo-light-image";
+      this.image.className = this.options.imageClass;
       this.caption = document.createElement("div");
-      this.caption.className = "turbo-light-caption";
+      this.caption.className = this.options.captionClass;
       this.counter = document.createElement("div");
-      this.counter.className = "turbo-light-counter";
+      this.counter.className = this.options.counterClass;
       this.closeButton = document.createElement("button");
-      this.closeButton.className = "turbo-light-close";
+      this.closeButton.className = this.options.closeClass;
       this.closeButton.innerHTML = "&times;";
       this.closeButton.setAttribute("aria-label", "Close lightbox");
       this.prevButton = document.createElement("button");
-      this.prevButton.className = "turbo-light-prev";
+      this.prevButton.className = this.options.prevClass;
       this.prevButton.innerHTML = "&#10094;";
       this.prevButton.setAttribute("aria-label", "Previous image");
       this.nextButton = document.createElement("button");
-      this.nextButton.className = "turbo-light-next";
+      this.nextButton.className = this.options.nextClass;
       this.nextButton.innerHTML = "&#10095;";
       this.nextButton.setAttribute("aria-label", "Next image");
       this.container.appendChild(this.image);
@@ -145,50 +127,46 @@ var TurboLight = (() => {
     handleClick(event) {
       event.preventDefault();
       const link = event.currentTarget;
+      this.open(link);
+    }
+    /**
+     * Open the lightbox with the specified link
+     * @param {HTMLElement} link - The link element that was clicked
+     */
+    open(link) {
+      if (!this.overlay) {
+        this.createLightboxElements();
+      }
       const galleryName = link.dataset.turbolight;
+      this.currentGallery = galleryName;
       const gallery = this.galleries[galleryName];
       const index = gallery.findIndex((item) => item.element === link);
-      this.open(galleryName, index);
-    }
-    /**
-     * Open the lightbox
-     * @param {string} galleryName - Gallery name
-     * @param {number} index - Index of the image to show
-     */
-    open(galleryName, index = 0) {
-      if (!this.galleries[galleryName]) {
-        console.error(`Gallery "${galleryName}" not found`);
-        return;
-      }
-      this.currentGallery = galleryName;
-      this.currentIndex = index;
-      this.overlay.classList.add("turbo-light-active");
+      this.overlay.classList.add(this.options.activeClass);
       this.isOpen = true;
-      document.addEventListener("keydown", this.handleKeyDown);
-      this.showImage(index);
       document.body.style.overflow = "hidden";
+      this.showImage(index);
+      document.addEventListener("keydown", this.handleKeyDown);
     }
     /**
-     * Close the lightbox
+     * Close the lightbox and remove elements from DOM
      */
     close() {
       if (!this.overlay)
         return;
-      this.overlay.classList.remove("turbo-light-active");
-      this.isOpen = false;
+      this.overlay.remove();
       document.removeEventListener("keydown", this.handleKeyDown);
       document.body.style.overflow = "";
+      this.isOpen = false;
       this.currentGallery = null;
       this.currentIndex = 0;
-      if (this.image) {
-        this.image.src = "";
-      }
-      if (this.caption) {
-        this.caption.innerHTML = "";
-      }
-      if (this.counter) {
-        this.counter.innerHTML = "";
-      }
+      this.overlay = null;
+      this.container = null;
+      this.image = null;
+      this.caption = null;
+      this.counter = null;
+      this.closeButton = null;
+      this.prevButton = null;
+      this.nextButton = null;
     }
     /**
      * Show the next image
@@ -230,10 +208,10 @@ var TurboLight = (() => {
       }
       this.currentIndex = index;
       const imageData = gallery[index];
-      this.container.classList.add("turbo-light-loading");
+      this.container.classList.add(this.options.loadingClass);
       this.image.src = imageData.href;
       this.image.onload = () => {
-        this.container.classList.remove("turbo-light-loading");
+        this.container.classList.remove(this.options.loadingClass);
       };
       this.caption.innerHTML = imageData.title || "";
       this.updateCounter();
