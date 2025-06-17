@@ -1,6 +1,6 @@
 {
   "name": "turbolight",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A lightweight, vanilla JavaScript lightbox that works with Turbo Streams",
   "keywords": [
     "turbo",
