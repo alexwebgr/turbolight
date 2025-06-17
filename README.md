@@ -106,17 +106,29 @@ Create a Stimulus controller for TurboLight. If you are going to be using the co
 import { Controller } from "@hotwired/stimulus"
 import TurboLight from "turbolight";
 
+let turboLightInstance = null;
+
 // Connects to data-controller="turbo-light"
 export default class extends Controller {
-  connect() {
-    this.turboLight = new TurboLight();
-  }
-
-  disconnect() {
-    if (this.turboLight && this.turboLight.isOpen) {
-      this.turboLight.close();
+    connect() {
+        if (turboLightInstance) {
+            this.refreshLinks();
+        } else {
+            turboLightInstance = new TurboLight();
+        }
     }
-  }
+
+    disconnect() {
+        if (turboLightInstance && turboLightInstance.isOpen) {
+            turboLightInstance.close();
+        }
+    }
+
+    refreshLinks() {
+        if (turboLightInstance) {
+            turboLightInstance.findLinks();
+        }
+    }
 }
 ```
 
